@@ -1,0 +1,30 @@
+{
+  "name": "breed",
+  "version": "0.0.1",
+  "description": "simudyne project solution using a parallel approach",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^2.5.0",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LitlBro/breed.git"
+  },
+  "keywords": [
+    "node.js",
+    "simudyne"
+  ],
+  "author": "LitlBro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LitlBro/breed/issues"
+  },
+  "homepage": "https://github.com/LitlBro/breed#readme"
+}

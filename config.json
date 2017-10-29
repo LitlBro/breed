@@ -1,0 +1,7 @@
+{
+  "root":"/home/skid/Work/fun/nodejs/breed",
+  "dbLocalization":"/",
+  "dbName":"breedDb",
+  "nbMaxWorker":"4",
+  "brandFactor":1
+}

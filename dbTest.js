@@ -9,16 +9,18 @@ let db = new sqlite3.Database('./breedDb', sqlite3.OPEN_READONLY, (err) => {
   console.log('Connected to the in-memory SQlite database.');
 });
 
+var start = new Date();
 
-db.serialize(() => {
-  db.each(`SELECT *
-           FROM data`, (err, row) => {
-    if (err) {
-      console.error(err.message);
-    }
-    run(row, brandFactor);
-  });
+console.log("getting to promise");
+run(db)
+.then((data) => {
+  var delay = new Date() - start;
+  console.log(delay);
+}).catch((err) => {
+  console.log(err)
 });
+
+
 
 // close the database connection
 db.close((err) => {
@@ -28,12 +30,12 @@ db.close((err) => {
   console.log('Close the database connection.');
 });
 
-function run(set, factor) {
+function breed(set, factor) {
   var initBreed = set.breed;
   var rand = Math.random() * 3;
   var Affinity = 0;
   for(var i = 1; i <= 15; i++) {
-    console.log(i);
+//    console.log(i);
     if (set.renew==false) {
         affinity = set.payment/set.price + (rand * set.promotion * set.inertia);
         if (set.breed == 'Breed_C' && affinity < (set.grade * set.brand)) {
@@ -44,5 +46,26 @@ function run(set, factor) {
     }
     rand = Math.random() * 3;
   }
-  console.log("complete for breed = " + initBreed);
+}
+
+
+function run(database) {
+  var count = 0;
+  console.log("entering db");
+  return new Promise((resolve, reject) => {
+    database.serialize(() => {
+      database.each(`SELECT * FROM data`, (err, row) => {
+        if (err) {
+          reject(err);
+        }
+        count ++;
+        breed(row, brandFactor);
+      }, (data) => {
+        console.log("solving promises count = " + count);
+        console.log(data);
+        resolve();
+      });
+    });
+
+    })
 }

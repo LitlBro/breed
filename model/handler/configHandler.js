@@ -1,0 +1,51 @@
+/*
+* Project config handler
+* a specific config file could be build for each project
+* prevent the presence of hard written variables
+*/
+var fs = require("fs");
+
+const pathToConfig = '../../config.json';
+  try {
+    var fs = require("fs");
+    var content = fs.readFileSync(pathToConfig);
+    var jsonContent = JSON.parse(content);
+  } catch (error) {
+    console.log(error);
+  }
+
+function getValue(content, index) {
+  try {
+    return content[index];
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function getFactor(content) {
+  return getValue(content, 'brandFactor');
+}
+
+function getDbName(content) {
+  return getValue(content, 'dbName');
+}
+
+function getDbLoc(content) {
+  return getValue(content, 'dbLocalization');
+}
+
+function getMaxWorker(content) {
+  return getValue(content, 'nbMaxWorker');
+}
+
+function getRoot(content) {
+  return getValue(content, 'root');
+}
+
+
+module.exports.values = jsonContent;
+module.exports.getFactor = getFactor;
+module.exports.getRoot = getRoot;
+module.exports.getDbName = getDbName;
+module.exports.getDbLoc = getDbLoc;
+module.exports.getMaxWorker = getMaxWorker;
