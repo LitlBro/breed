@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>HTML Reference</title>
+  </head>
+
+  <body>
+    <h1>Je vais afficher pour facteur :  <%= facteur %></h1>
+
+
+    <ul class="report">
+        <% for (var index in results) { %>
+        <li class="element">
+            <div class="timeline-time">
+                <%= JSON.stringify(results[index]) %>
+            </div>
+        </li>
+        <% } %>
+    </ul>
+  </body>
+
+</html>

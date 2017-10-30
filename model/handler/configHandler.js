@@ -4,8 +4,8 @@
 * prevent the presence of hard written variables
 */
 var fs = require("fs");
-
-const pathToConfig = '../../config.json';
+console.log();
+const pathToConfig = __dirname + '/../../config.json';
   try {
     var fs = require("fs");
     var content = fs.readFileSync(pathToConfig);

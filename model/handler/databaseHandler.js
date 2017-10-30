@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-const config = require('./configHandler.js');
 var async = require('async');
 
 // open database in memory
@@ -19,8 +18,6 @@ function close(db) {
   db.close((err) => {
     if (err) {
       return console.error(err.message);
-    } else {
-      console.log('Close the database connection.');
     }
   });
 }
