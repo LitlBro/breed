@@ -1,6 +1,5 @@
 {
-  "root":"/home/skid/Work/fun/nodejs/simu",
-  "dbLocalization":"/",
+  "dbLocalization":"./",
   "dbName":"breedDb",
   "nbMaxWorker":"4",
   "brandFactor":1

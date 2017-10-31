@@ -18,7 +18,12 @@ promotion double,
 renew boolean,
 inertia integer);
 
-to import the csv file, I used 
+to import the csv file, I used
 `$ sqlite> .mode csv`
 `$ sqlite> .import /path/to/csv data`
 
+# Use
+
+launch index.js using `$ node index.js`
+the database is currently stored in the project
+Visit localhost:3000 and choose a factor 

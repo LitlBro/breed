@@ -21,16 +21,25 @@
 
   <div class="container-fluid text-center">
     <div class="row content">
-      <div class="col-sm-6">
-        <div id="firstDiv"></div>
+      <div class="col-sm-6 text-center">
+        <h5>Initial breed distribution</h5>
+        <div id="InitBreed">
+        </div>
       </div>
-      <div class="col-sm-6">
-        <div id="secondDiv"></div>
+      <div class="col-sm-6 text-center">
+        <h5>Final breed distribution</h5>
+        <div id="FinalBreed"></div>
       </div>
     </div>
     <div class="row content">
-      <div class="col-sm-12">
-        <div id="thirdDiv"></div>
+      <h5>Breed distribution evolution</h5>
+      <div class="col-sm-12 text-center">
+        <div id="evolution"></div>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-sm-12 text-center">
+        <div id="breedData"></div>
       </div>
     </div>
 
@@ -39,41 +48,129 @@
 </body>
 </html>
 
+
 <script>
-var data = [{
-  values: [19, 26, 55],
-  labels: ['Residential', 'Non-Residential', 'Utility'],
-  type: 'pie'
-}];
+  var results = <%- JSON.stringify(results) %>;
+  var xAxis = [];
+  var bc = [];
+  var bnc = [];
+  var bcLost = [];
+  var bcGained = [];
+  var bcRegained = [];
+  for(index in results) {
+    xAxis.push(index);
+    bc.push(results[index].breed_C);
+    bnc.push(results[index].breed_NC);
+    bcLost.push(results[index].breed_C_Lost);
+    bcGained.push(results[index].breed_C_Gained);
+    bcRegained.push(results[index].breed_C_Regained);
 
-var layout = {
-  height: 400,
-  width: 500
-};
-
-Plotly.newPlot('firstDiv', data, layout);
-
-var data = [{
-  values: [19, 26, 55],
-  labels: ['Residential', 'Non-Residential', 'Utility'],
-  type: 'pie'
-}];
-
-var layout = {
-  height: 400,
-  width: 500
-};
-
-Plotly.newPlot('secondDiv', data, layout);
-
-
-var data = [
-  {
-    x: ['giraffes', 'orangutans', 'monkeys'],
-    y: [20, 14, 23],
-    type: 'bar'
   }
-];
 
-Plotly.newPlot('thirdDiv', data);
+  var l = xAxis.length-1;
+  var bcInit = bc[l] - bcGained[l] + bcLost[l];
+  var bncInit = bnc[l] + bcGained[l] - bcLost[l];
+
+  var bcFinal = bc[l];
+  var bncFinal = bnc[l];
+
+//Building pie chart :
+var dataInit = [{
+  values: [bcInit, bncInit],
+  labels: ['Breed C', 'Breed NC'],
+  type: 'pie'
+}];
+
+var dataFinal = [{
+  values: [bcFinal, bncFinal],
+  labels: ['Breed C', 'Breed NC'],
+  type: 'pie'
+}];
+
+var layout = {
+  height: 400,
+  width: 400
+};
+
+Plotly.newPlot('InitBreed', dataInit, layout);
+Plotly.newPlot('FinalBreed', dataFinal, layout);
+
+var bcStack = {
+  x: xAxis,
+  y: bc,
+  name: 'BreedC',
+  type: 'bar'
+};
+
+var bncStack = {
+  x: xAxis,
+  y: bnc,
+  name: 'BreedNC',
+  type: 'bar'
+};
+
+var data = [bcStack, bncStack];
+var layout = {barmode: 'stack'};
+Plotly.newPlot('evolution', data, layout);
+
+
+//Build gained bar chart
+var gained = {
+  x: xAxis,
+  y: bcGained,
+  name: 'Breed C gained',
+  marker: {color: 'rgb(55, 83, 109)'},
+  type: 'bar'
+};
+
+//build lost bar chart
+var lost = {
+  x: xAxis,
+  y: bcLost,
+  name: 'Breed C lost',
+  marker: {color: 'rgb(26, 118, 255)'},
+  type: 'bar'
+};
+
+//build regained bar chart
+var regained = {
+  x: xAxis,
+  y: bcRegained,
+  name: 'Breed C Regained',
+  marker: {color: 'rgb(1, 148, 255)'},
+  type: 'bar'
+};
+
+//gather data into one array for bar chart
+var data = [gained, lost, regained];
+var layout = {
+  title: 'Breed C evolution',
+  xaxis: {tickfont: {
+      size: 14,
+      color: 'rgb(107, 107, 107)'
+    }},
+  yaxis: {
+    title: 'units',
+    titlefont: {
+      size: 16,
+      color: 'rgb(107, 107, 107)'
+    },
+    tickfont: {
+      size: 14,
+      color: 'rgb(107, 107, 107)'
+    }
+  },
+  legend: {
+    x: 1,
+    y: 2.0,
+    bgcolor: 'rgba(255, 255, 255, 0)',
+    bordercolor: 'rgba(255, 255, 255, 0)'
+  },
+  barmode: 'group',
+  bargap: 0.15,
+  bargroupgap: 0.1
+};
+
+//Building chart
+Plotly.newPlot('breedData', data, layout);
 </script>

@@ -6,11 +6,17 @@ const { spawn } = require('child_process');
 var async = require('async');
 
 
-
-async function distribute(rows, factor) {
+/*
+* return a promises of computed results
+* split the workload onto different worker (child process)
+* stream data to the worker in a non-blocking way
+* wait for all process to end before sending the final result
+*/
+async function distribute(payload, opt) {
+  // split the workload in chunks for each slave
   var nbWorker = Config.getMaxWorker(Config.values);
-  var nbChunk = Math.floor((rows.length)/nbWorker) + 1;
-  var chunks = await UtilArray.divide(rows, nbChunk);
+  var nbChunk = Math.floor((payload.length)/nbWorker) + 1;
+  var chunks = await UtilArray.divide(payload, nbChunk);
 
   var result = null;
   return new Promise((resolve, reject) => {
@@ -18,6 +24,7 @@ async function distribute(rows, factor) {
       for(index in chunks) {
         const worker = spawn('node', ['controller/breed/worker.js']);
 
+        //on receiving data : add them to the final result
         worker.stdout.on('data', (data) => {
           let body = JSON.parse(`${data}`);
           if(!result) result = body;
@@ -29,9 +36,12 @@ async function distribute(rows, factor) {
             }
           }
         });
+        //on error, reject promise
         worker.stderr.on('data', (data) => {
           reject(err);
         })
+        //when child end computing : decrease counter
+        //if counter reach 0, all slaves are done
         worker.on('close', (code) => {
           nbWorker --;
           if(nbWorker == 0) {
@@ -40,7 +50,7 @@ async function distribute(rows, factor) {
         });
         var payload = {
           'rows': chunks[index],
-          'factor': factor
+          'factor': opt
         };
         worker.stdin.write(JSON.stringify(payload));
         worker.stdin.end();
@@ -52,12 +62,15 @@ async function distribute(rows, factor) {
 
 }
 
+/*
+* Abstraction of the program entire execution
+*/
 async function execute(factor) {
-  var path = Config.getRoot(Config.values) + Config.getDbLoc(Config.values) + Config.getDbName(Config.values);
+  var path = Config.getDbLoc(Config.values) + Config.getDbName(Config.values);
   var db = await DbModel.open(path);
   var rows = await DbModel.get(db);
+  DbModel.close(db);
   var result = await distribute(rows, factor);
-  console.log(result);
   return result;
 }
 

@@ -38,14 +38,10 @@ function getMaxWorker(content) {
   return getValue(content, 'nbMaxWorker');
 }
 
-function getRoot(content) {
-  return getValue(content, 'root');
-}
 
 
 module.exports.values = jsonContent;
 module.exports.getFactor = getFactor;
-module.exports.getRoot = getRoot;
 module.exports.getDbName = getDbName;
 module.exports.getDbLoc = getDbLoc;
 module.exports.getMaxWorker = getMaxWorker;

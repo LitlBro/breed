@@ -2,6 +2,7 @@ var clone = require('clone');
 const Bc = 'Breed_C';
 const Bnc = 'Breed_NC';
 
+//Breed function as given in the project summary
 function breed(set, factor) {
   var initBreed = set.breed;
   var rand = Math.random() * 3;
@@ -20,6 +21,7 @@ function breed(set, factor) {
           hasSwitched = true;
         }
     }
+    // meaningful data are stored by year
     evolution[i] = {
       prev: clone(initBreed),
       curr: clone(set.breed),
@@ -30,6 +32,7 @@ function breed(set, factor) {
   return evolution;
 }
 
+// count the data asked for in project summary
 function compute(rows) {
   var breedC = 0;
   var breedNc = 0;
