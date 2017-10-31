@@ -18,7 +18,8 @@ router.get('/process/breed/:factor', function(req, res) {
     var process = require('./breed/main.js');
     process.execute(req.params.factor)
     .then((result) => {
-      res.render(pathView + 'breed/render.ejs', {results: result, facteur: req.params.factor});
+      console.log(result);
+      res.render(pathView + '/breed/render.ejs', {results: result, facteur: req.params.factor});
     })
     .catch((err) => {
       res.render(pathView + 'error.ejs', {error: err});
